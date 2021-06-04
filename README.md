@@ -20,8 +20,8 @@ This scripts deploys three policies for the different locations covered by DLP. 
   - Detect any volume sensitive data being sent to outside of the organization
   - Require User to provide justification for sharing sensitive info
   - Detect HIGH VOLUMES of sensitive data being shared ourside of org.
-  - Provide a report for admin (Not currently functioning)
-
+  - Provide a report for admin
+ 
 - Sensitive Information Covered by default
   - U.S. Social Security Number (SSN)
   - Credit Card Number
