@@ -37,23 +37,46 @@ Email: Alex@ivantsov.tech
 #>
 
 
-$Answer = Read-Host "Do you want to configure the Data Loss Prevention Policy and Rules [v1.2] ? Type Y or N and press Enter to continue"
-if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+#################################################
+## Variables - Set your organization's variables
+#################################################
 
-    Write-Host
-    Write-Host
-    $Answer = Read-Host "Have you connected all the required PowerShell CMDlets? (ExchangeOnline, IPPSSession) Y or N"
-            if ($Answer -eq 'N' -or $Answer -eq 'no') {
 
-            Connect-ExchangeOnline
+   # Other
+      $MessageColor = "Green"
+      $AssessmentColor = "Yellow"
 
-            Connect-IPPSSession
 
-            }
 
-    Write-Host
-    Write-Host
-    $AlertAddress = Read-Host "Enter the Customer's ADMIN EMAIL ADDRESS. This is where you will recieve alerts, notifications and set up admin access to all mailboxes. MUST BE AN INTERNAL ADMIN ADDRESS"
+   $Answer = Read-Host "Would you like this script to configure your Microsoft 365 Environment for Data Loss Prevention?"
+   if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+
+      $Answer = Read-Host "Have you connected all the required PowerShell CMDlets? (ExchangeOnline, IPPS) Y or N"
+      if ($Answer -eq 'N' -or $Answer -eq 'no') {
+
+         Write-Host
+         Write-Host -ForegroundColor $MessageColor "Please enter your Tenant's Global Admin Credentials"
+         Write-Host
+         Write-Host
+
+         $Cred = Get-Credential
+
+         Connect-ExchangeOnline -UserPrincipalName $Cred.Username
+
+         Connect-IPPSSession -UserPrincipalName $Cred.Username
+
+         }
+
+      Write-Host
+      Write-Host
+
+      $AlertAddress = $Cred.UserName
+
+      if ($null -eq $AlertAddress) {
+         Write-Host
+         Write-Host
+         $AlertAddress = Read-Host "Enter the Customer's ADMIN EMAIL ADDRESS. This is where you will recieve alerts, notifications and set up admin access to all mailboxes. MUST BE AN INTERNAL ADMIN ADDRESS"
+      }
 
 
 
@@ -67,7 +90,7 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
             @{Name= "Credit Card Number"; minCount="3"; confidencelevel = 'High'};
          #   @{Name= "Drug Enforcement Agency (DEA) Number"; minCount="3"; confidencelevel = 'High'};
          #   @{Name= "U.S. / U.K. Passport Number"}; Known Bug. Needs GUID- See next line
-            @{Name= "178ec42a-18b4-47cc-85c7-d62c92fd67f8"; minCount="3"; confidencelevel = 'High'};
+            @{Name= "178ec42a-18b4-47cc-85c7-d62c92fd67f8"; minCount="1"; confidencelevel = 'High'}; # U.S. / U.K. Passport Number
             @{Name= "U.S. Bank Account Number"; minCount="3"; confidencelevel = 'High'};
             @{Name= "U.S. Driver's License Number"; minCount="3"; confidencelevel = 'High'};
             @{Name= "U.S. Individual Taxpayer Identification Number (ITIN)"; minCount="3"; confidencelevel = 'High'};
@@ -90,7 +113,7 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
             @{Name= "Credit Card Number"; minCount="1"; maxCount="2"; confidencelevel = 'High'};
          #   @{Name= "Drug Enforcement Agency (DEA) Number"; minCount="1"; maxCount="2"; confidencelevel = 'High'};
          #   @{Name= "U.S. / U.K. Passport Number"}; Known Bug. Needs GUID- See next line
-            @{Name= "178ec42a-18b4-47cc-85c7-d62c92fd67f8"; minCount="1"; maxCount="2"; confidencelevel = 'High'};
+            @{Name= "178ec42a-18b4-47cc-85c7-d62c92fd67f8"; minCount="1"; confidencelevel = 'High'}; # U.S. / U.K. Passport Number
             @{Name= "U.S. Bank Account Number"; minCount="1"; maxCount="2"; confidencelevel = 'High'};
             @{Name= "U.S. Driver's License Number"; minCount="1"; maxCount="2"; confidencelevel = 'High'};
             @{Name= "U.S. Individual Taxpayer Identification Number (ITIN)"; minCount="1"; maxCount="2"; confidencelevel = 'High'};
@@ -113,7 +136,7 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
             @{Name= "Credit Card Number"; minCount="1"; confidencelevel = 'High'};
          #   @{Name= "Drug Enforcement Agency (DEA) Number"; minCount="1"; confidencelevel = 'High'};
          #   @{Name= "U.S. / U.K. Passport Number"}; Known Bug. Needs GUID- See next line
-            @{Name= "178ec42a-18b4-47cc-85c7-d62c92fd67f8"; minCount="1"; confidencelevel = 'High'};
+            @{Name= "178ec42a-18b4-47cc-85c7-d62c92fd67f8"; minCount="1"; confidencelevel = 'High'}; # U.S. / U.K. Passport Number
             @{Name= "U.S. Bank Account Number"; minCount="1"; confidencelevel = 'High'};
             @{Name= "U.S. Driver's License Number"; minCount="1"; confidencelevel = 'High'};
             @{Name= "U.S. Individual Taxpayer Identification Number (ITIN)"; minCount="1"; confidencelevel = 'High'};
@@ -348,5 +371,7 @@ Write-Host
 Write-Host
 Write-Host -foregroundcolor green "[v1.2] Data Loss Prevention Policy and Rules for All Non-Exchange Platforms have been created."
 
-
 } ## End Of Script
+
+
+#>
